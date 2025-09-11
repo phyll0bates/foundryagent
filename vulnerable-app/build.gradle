@@ -1,0 +1,22 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClass = 'Example'
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task copyJar(type: Copy) {
+    from("$buildDir/libs")
+    into("$projectDir/libs")
+}
+
+build.dependsOn copyJar
