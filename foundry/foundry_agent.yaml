@@ -1,12 +1,7 @@
 kind: Agent
 name: AutoPatch
 description: "Risk-based patching agent that parses Tenable reports, replaces vulnerable libraries with approved binaries and opens a remediation PR."
-entrypoint: "python main.py"
+entrypoint: "python foundry/autopatch_codeaware.py"
 inputs:
   - name: tenable_file
-    type: file
-  - name: window
-    type: string
-outputs:
-  - name: autopatch_log
     type: file
