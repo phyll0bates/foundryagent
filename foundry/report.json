@@ -1,0 +1,10 @@
+{
+  "vulnerabilities": [
+    {
+      "pkg": "log4j",
+      "version": "1.2.17",
+      "hosts": ["host1"],
+      "cve": "CVE-2025-0001"
+    }
+  ]
+}
