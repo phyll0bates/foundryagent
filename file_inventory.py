@@ -128,17 +128,27 @@ def preparar_directorio_salida() -> Path:
         except OSError:
             pass
 
-    try:
-        modo_actual = stat.S_IMODE(destino_base.stat().st_mode)
-    except OSError as error:
-        raise RuntimeError(
-            f"No se pudo validar la seguridad de '{destino_base}': {error.strerror or error}"
-        ) from error
+    if os.name != "nt":
+        try:
+            modo_actual = stat.S_IMODE(destino_base.stat().st_mode)
+        except OSError as error:
+            raise RuntimeError(
+                "No se pudo validar la seguridad de "
+                f"'{destino_base}': {error.strerror or error}"
+            ) from error
 
-    if modo_actual & 0o077:
-        raise RuntimeError(
-            f"El directorio de salida '{destino_base}' debe ser privado para el usuario."
-        )
+        if modo_actual & 0o077:
+            raise RuntimeError(
+                f"El directorio de salida '{destino_base}' debe ser privado para el usuario."
+            )
+    else:
+        # En Windows los permisos POSIX tradicionales no son significativos.
+        # Dejamos un mensaje informativo si el directorio es compartido, pero
+        # no bloqueamos la ejecución para no impedir el uso legítimo.
+        if not os.access(destino_base, os.W_OK | os.X_OK):
+            raise RuntimeError(
+                f"No se tiene permiso de escritura en el directorio '{destino_base}'."
+            )
 
     return destino_base
 
